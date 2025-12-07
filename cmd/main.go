@@ -5,83 +5,159 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"task-tracker/internal"
+	"time"
+	// "time"
 )
-
-var i rune;
 
 type Task = internal.Task;
 
 func main() {
 	
-	tasks := read();
-	fmt.Println(tasks);
+	args := os.Args;
+	numArgs := len(args);
 
-	// task := internal.Task{
-	// 	ID: 2,
-	// 	Description: "Estudar Go",
-	// 	Status: "todo",
-	// 	CreatedAt: "01-10-2025",
-	// 	UpdatedAt: "25-12-2025",
-	// }
-
-	// save(task);
-
+	if numArgs < 2 {
+		log.Fatal("Necessita de pelo menos dois argumentos!");
+	}
 	
-	// command := args[1];
+	option := args[1];
+	fmt.Println(option);
+	switch option {
 
-	// switch command {
-	// case "add":
-	// case "update":
-	// case "delete":
-	// case "mark-in-progress":
-	// case "mark-done":
-	// default:
-	// 	log.Fatal("Inavlid type of argument!");
-	// }
+	case "list":
+
+		tasks := ReadTasks();
+
+		for _, task := range tasks {
+			PrintTask(task);
+		}
+
+
+		
+	case "add":
+		
+		if numArgs < 3 || numArgs > 3 {
+			log.Fatal("Para adicionar só necessita de 3 argumentos");
+		}
+		
+		task := Task{
+			Description: args[2],
+			Status: "todo",
+			CreatedAt: fmt.Sprint(time.Now().Format("02/01/2006")),
+		}
+		AddTask(task);
+
+	case "update":
+	case "delete":
+
+		if numArgs < 3 || numArgs > 3 {
+			log.Fatal("Para adicionar só necessita de 3 argumentos");
+		}
+
+		id, err := strconv.Atoi(args[2]);
+
+		if err != nil {
+			log.Fatal("ID Inválido!");
+		}
+		tasks := ReadTasks();
+		for i := id; i < len(tasks); i++ {
+			tasks[i].ID--;
+		}
+
+		tasks = append(tasks[:id-1], tasks[id:]...);
+		SaveTask(tasks);
+
+	case "mark-in-progress":
+
+		if numArgs < 3 || numArgs > 3 {
+			log.Fatal("Para adicionar só necessita de 3 argumentos");
+		}
+
+		id, err := strconv.Atoi(args[2]);
+
+		if err != nil {
+			log.Fatal("ID Inválido!");
+		}
+
+		tasks := ReadTasks();
+		tasks[id-1].Status = "in-progress";
+		SaveTask(tasks);
+
+	case "mark-done":
+
+		if numArgs < 3 || numArgs > 3 {
+			log.Fatal("Para adicionar só necessita de 3 argumentos");
+		}
+
+		id, err := strconv.Atoi(args[2]);
+
+		if err != nil {
+			log.Fatal("ID Inválido!");
+		}
+
+		tasks := ReadTasks();
+		tasks[id-1].Status = "done";
+		SaveTask(tasks);
+
+	default:
+		log.Fatal("Inavlid type of argument!");
+	}
 }
 
-func read() []Task{
+func ReadTasks() []Task{
 
-	content, err := os.ReadFile("tasks");
+	if _, err := os.Stat("tasks.json"); os.IsNotExist(err) {
+        SaveTask([]Task{});
+        return []Task{}
+    }
 
-	if err != nil {
-		log.Fatal(err);
-	}
+    content, err := os.ReadFile("tasks.json");
+    if err != nil {
+        log.Fatal("Erro ao ler arquivo:", err);
+    }
 
-	var tasks []Task;
+    if len(content) == 0 {
+        return []Task{};
+    }
 
-	err = json.Unmarshal(content, &tasks)
+    var tasks []Task;
+    err = json.Unmarshal(content, &tasks);
     if err != nil {
         log.Fatalf("Erro ao fazer Unmarshal do JSON: %v", err)
     }
 
-	fmt.Println(tasks);
-
-	return tasks;
+    return tasks
 }
 
-func save(task Task) {
+func SaveTask(tasks []Task) {
 
-	jsonData, err := json.MarshalIndent(task, "", "   ");
+	jsonData, err := json.MarshalIndent(tasks, "", "   ");
 	
 	if err != nil {
 		log.Fatal(err);
 	}
 
-	file, err := os.Create("tasks.json");
+	err = os.WriteFile("tasks.json", jsonData, 0644)
+    if err != nil {
+        log.Fatal("Erro ao escrever arquivo:", err)
+    }
 
-	if err != nil {
-		log.Fatal(err);
-	}
+}
 
-	defer file.Close()
-
-	_, err = file.Write(jsonData);
-
-	if err != nil {
-		log.Fatal(err);
-	}
-
+func AddTask(task Task) {
+	tasks := ReadTasks();
+	task.ID = len(tasks) + 1;
+	tasks = append(tasks, task);
+	SaveTask(tasks);
 	log.Println("Task created sucssesfully!");
+}
+
+func PrintTask(task Task) {
+
+	fmt.Println("......................................................");
+	fmt.Printf("\tID: %d\n\tDescription: %s\n\tSatus: %s\n\tCreated At: %s\n\tUpdated At: %s\n", 
+	task.ID, task.Description, task.Status, task.CreatedAt, task.UpdatedAt);
+	fmt.Println("......................................................");
 }

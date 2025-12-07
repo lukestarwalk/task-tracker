@@ -1,0 +1,16 @@
+[
+   {
+      "id": 1,
+      "description": "Estudar Gin",
+      "status": "in-progress",
+      "createdAt": "01-10-2025",
+      "updatedAt": "25-12-2025"
+   },
+   {
+      "id": 2,
+      "description": "Lab 5 APLM",
+      "status": "done",
+      "createdAt": "07/12/2025",
+      "updatedAt": ""
+   }
+]
