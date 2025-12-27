@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -73,4 +74,11 @@ func Mark(tasks *[]Task, taskId, typeMark string) {
 	(*tasks)[id-1].Status = status[1];
 
 	SaveTasks(tasks);
+}
+
+func PrintTask(task *Task) {
+
+	fmt.Println("......................................................");
+	fmt.Printf("\tID: %d\n\tDescription: %s\n\tSatus: %s\n\tCreated At: %s\n\tUpdated At: %s\n", 
+	task.ID, task.Description, task.Status, task.CreatedAt, task.UpdatedAt);
 }

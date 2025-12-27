@@ -2,7 +2,6 @@ package internal
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 )
@@ -39,7 +38,7 @@ func ReadTasks() *[]Task{
     }
 
     var tasks []Task;
-    err = json.Unmarshal(content, tasks);
+    err = json.Unmarshal(content, &tasks);
     if err != nil {
         log.Fatalf("Erro ao fazer Unmarshal do JSON aqui: %v", err)
     }
@@ -47,10 +46,4 @@ func ReadTasks() *[]Task{
     return &tasks;
 }
 
-func PrintTask(task *Task) {
-
-	fmt.Println("......................................................");
-	fmt.Printf("\tID: %d\n\tDescription: %s\n\tSatus: %s\n\tCreated At: %s\n\tUpdated At: %s\n", 
-	task.ID, task.Description, task.Status, task.CreatedAt, task.UpdatedAt);
-}
 
