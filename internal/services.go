@@ -9,9 +9,19 @@ import (
 )
 
 func List(tasks *[]Task) {
+
+	if tasks == nil {
+		log.Fatal("There are no tasks to list!");
+		return;
+	}
+
+	if len(*tasks) < 1 {
+		log.Fatal("There are no tasks to list!");
+		return;
+	}
 	
 	for _, task := range *tasks {
-		PrintTask(&task)
+		PrintTask(&task);
 	}
 }
 
