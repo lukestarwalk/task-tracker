@@ -1,14 +1,9 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"task-tracker/internal"
-	"time"
-	// "time"
 )
 
 type Task = internal.Task;
@@ -23,141 +18,48 @@ func main() {
 	}
 	
 	option := args[1];
-	fmt.Println(option);
+
+	tasks := internal.ReadTasks();
 	switch option {
 
 	case "list":
-
-		tasks := ReadTasks();
-
-		for _, task := range tasks {
-			PrintTask(task);
-		}
-
-
+		internal.List(tasks);
 		
 	case "add":
-		
-		if numArgs < 3 || numArgs > 3 {
-			log.Fatal("Para adicionar só necessita de 3 argumentos");
+		if numArgs != 3 {
+			log.Fatal("It's required 3 arguments");
 		}
-		
-		task := Task{
-			Description: args[2],
-			Status: "todo",
-			CreatedAt: fmt.Sprint(time.Now().Format("02/01/2006")),
-		}
-		AddTask(task);
+		internal.Add(tasks, args[2]);
 
 	case "update":
+		if numArgs != 4 {
+			log.Fatal("It's required 4 arguments");
+		}
+		internal.Update(tasks, args[2], args[3]);
+
 	case "delete":
 
-		if numArgs < 3 || numArgs > 3 {
-			log.Fatal("Para adicionar só necessita de 3 argumentos");
+		if numArgs != 3 {
+			log.Fatal("It's required 3 arguments");
 		}
 
-		id, err := strconv.Atoi(args[2]);
-
-		if err != nil {
-			log.Fatal("ID Inválido!");
-		}
-		tasks := ReadTasks();
-		for i := id; i < len(tasks); i++ {
-			tasks[i].ID--;
-		}
-
-		tasks = append(tasks[:id-1], tasks[id:]...);
-		SaveTask(tasks);
+		internal.Delete(tasks, args[2]);
 
 	case "mark-in-progress":
 
-		if numArgs < 3 || numArgs > 3 {
-			log.Fatal("Para adicionar só necessita de 3 argumentos");
+		if numArgs != 3 {
+			log.Fatal("It's required 3 arguments");
 		}
-
-		id, err := strconv.Atoi(args[2]);
-
-		if err != nil {
-			log.Fatal("ID Inválido!");
-		}
-
-		tasks := ReadTasks();
-		tasks[id-1].Status = "in-progress";
-		SaveTask(tasks);
+		internal.Mark(tasks, args[2], "mark-in-progress");
 
 	case "mark-done":
 
-		if numArgs < 3 || numArgs > 3 {
-			log.Fatal("Para adicionar só necessita de 3 argumentos");
+		if numArgs != 3 {
+			log.Fatal("It's required 3 arguments");
 		}
-
-		id, err := strconv.Atoi(args[2]);
-
-		if err != nil {
-			log.Fatal("ID Inválido!");
-		}
-
-		tasks := ReadTasks();
-		tasks[id-1].Status = "done";
-		SaveTask(tasks);
+		internal.Mark(tasks, args[2], "mark-done");
 
 	default:
 		log.Fatal("Inavlid type of argument!");
 	}
-}
-
-func ReadTasks() []Task{
-
-	if _, err := os.Stat("tasks.json"); os.IsNotExist(err) {
-        SaveTask([]Task{});
-        return []Task{}
-    }
-
-    content, err := os.ReadFile("tasks.json");
-    if err != nil {
-        log.Fatal("Erro ao ler arquivo:", err);
-    }
-
-    if len(content) == 0 {
-        return []Task{};
-    }
-
-    var tasks []Task;
-    err = json.Unmarshal(content, &tasks);
-    if err != nil {
-        log.Fatalf("Erro ao fazer Unmarshal do JSON: %v", err)
-    }
-
-    return tasks
-}
-
-func SaveTask(tasks []Task) {
-
-	jsonData, err := json.MarshalIndent(tasks, "", "   ");
-	
-	if err != nil {
-		log.Fatal(err);
-	}
-
-	err = os.WriteFile("tasks.json", jsonData, 0644)
-    if err != nil {
-        log.Fatal("Erro ao escrever arquivo:", err)
-    }
-
-}
-
-func AddTask(task Task) {
-	tasks := ReadTasks();
-	task.ID = len(tasks) + 1;
-	tasks = append(tasks, task);
-	SaveTask(tasks);
-	log.Println("Task created sucssesfully!");
-}
-
-func PrintTask(task Task) {
-
-	fmt.Println("......................................................");
-	fmt.Printf("\tID: %d\n\tDescription: %s\n\tSatus: %s\n\tCreated At: %s\n\tUpdated At: %s\n", 
-	task.ID, task.Description, task.Status, task.CreatedAt, task.UpdatedAt);
-	fmt.Println("......................................................");
 }
