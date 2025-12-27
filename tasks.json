@@ -1,0 +1,58 @@
+[
+   {
+      "id": 1,
+      "description": "A",
+      "status": "done",
+      "createdAt": "01-10-2025",
+      "updatedAt": "13-12-2025"
+   },
+   {
+      "id": 2,
+      "description": "Conectar a API do AnunciosLoc",
+      "status": "done",
+      "createdAt": "07/12/2025",
+      "updatedAt": "08-12-2025"
+   },
+   {
+      "id": 3,
+      "description": "Projecto de CG",
+      "status": "todo",
+      "createdAt": "08/12/2025",
+      "updatedAt": ""
+   },
+   {
+      "id": 4,
+      "description": "Projecto de GPI",
+      "status": "todo",
+      "createdAt": "08-12-2025",
+      "updatedAt": ""
+   },
+   {
+      "id": 5,
+      "description": "Projecto de A",
+      "status": "todo",
+      "createdAt": "08-12-2025",
+      "updatedAt": ""
+   },
+   {
+      "id": 6,
+      "description": "Projecto de B",
+      "status": "todo",
+      "createdAt": "08-12-2025",
+      "updatedAt": ""
+   },
+   {
+      "id": 7,
+      "description": "Teste",
+      "status": "todo",
+      "createdAt": "13-12-2025",
+      "updatedAt": ""
+   },
+   {
+      "id": 8,
+      "description": "Estudooo",
+      "status": "todo",
+      "createdAt": "13-12-2025",
+      "updatedAt": "13-12-2025"
+   }
+]

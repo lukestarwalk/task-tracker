@@ -1,87 +1,65 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"task-tracker/internal"
 )
 
-var i rune;
-
 type Task = internal.Task;
 
 func main() {
 	
-	tasks := read();
-	fmt.Println(tasks);
+	args := os.Args;
+	numArgs := len(args);
 
-	// task := internal.Task{
-	// 	ID: 2,
-	// 	Description: "Estudar Go",
-	// 	Status: "todo",
-	// 	CreatedAt: "01-10-2025",
-	// 	UpdatedAt: "25-12-2025",
-	// }
-
-	// save(task);
-
+	if numArgs < 2 {
+		log.Fatal("Necessita de pelo menos dois argumentos!");
+	}
 	
-	// command := args[1];
+	option := args[1];
 
-	// switch command {
-	// case "add":
-	// case "update":
-	// case "delete":
-	// case "mark-in-progress":
-	// case "mark-done":
-	// default:
-	// 	log.Fatal("Inavlid type of argument!");
-	// }
-}
+	tasks := internal.ReadTasks();
+	switch option {
 
-func read() []Task{
+	case "list":
+		internal.List(tasks);
+		
+	case "add":
+		if numArgs != 3 {
+			log.Fatal("It's required 3 arguments");
+		}
+		internal.Add(tasks, args[2]);
 
-	content, err := os.ReadFile("tasks");
+	case "update":
+		if numArgs != 4 {
+			log.Fatal("It's required 4 arguments");
+		}
+		internal.Update(tasks, args[2], args[3]);
 
-	if err != nil {
-		log.Fatal(err);
+	case "delete":
+
+		if numArgs != 3 {
+			log.Fatal("It's required 3 arguments");
+		}
+
+		internal.Delete(tasks, args[2]);
+
+	case "mark-in-progress":
+
+		if numArgs != 3 {
+			log.Fatal("It's required 3 arguments");
+		}
+		internal.Mark(tasks, args[2], "mark-in-progress");
+
+	case "mark-done":
+
+		if numArgs != 3 {
+			log.Fatal("It's required 3 arguments");
+		}
+		internal.Mark(tasks, args[2], "mark-done");
+
+	default:
+		log.Fatal("Inavlid type of argument!");
 	}
-
-	var tasks []Task;
-
-	err = json.Unmarshal(content, &tasks)
-    if err != nil {
-        log.Fatalf("Erro ao fazer Unmarshal do JSON: %v", err)
-    }
-
-	fmt.Println(tasks);
-
-	return tasks;
-}
-
-func save(task Task) {
-
-	jsonData, err := json.MarshalIndent(task, "", "   ");
-	
-	if err != nil {
-		log.Fatal(err);
-	}
-
-	file, err := os.Create("tasks.json");
-
-	if err != nil {
-		log.Fatal(err);
-	}
-
-	defer file.Close()
-
-	_, err = file.Write(jsonData);
-
-	if err != nil {
-		log.Fatal(err);
-	}
-
-	log.Println("Task created sucssesfully!");
 }
