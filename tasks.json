@@ -51,15 +51,8 @@
    {
       "id": 8,
       "description": "Estudooo",
-      "status": "todo",
+      "status": "done",
       "createdAt": "13-12-2025",
       "updatedAt": "13-12-2025"
-   },
-   {
-      "id": 9,
-      "description": "Cle veio",
-      "status": "todo",
-      "createdAt": "27-12-2025",
-      "updatedAt": ""
    }
 ]

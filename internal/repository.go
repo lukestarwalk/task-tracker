@@ -16,7 +16,7 @@ func SaveTasks(tasks *[]Task) {
 
 	err = os.WriteFile("tasks.json", jsonData, 0644)
     if err != nil {
-        log.Fatal("Erro ao escrever arquivo:", err)
+        log.Fatal("Something went wrong while trying to create tasks file:", err)
     }
 }
 
@@ -30,7 +30,7 @@ func ReadTasks() *[]Task{
     
     content, err := os.ReadFile("tasks.json");
     if err != nil {
-        log.Fatal("Erro ao ler arquivo:", err);
+        log.Fatal("S:", err);
     }
     
     if len(content) == 0 {
@@ -40,7 +40,7 @@ func ReadTasks() *[]Task{
     var tasks []Task;
     err = json.Unmarshal(content, &tasks);
     if err != nil {
-        log.Fatalf("Erro ao fazer Unmarshal do JSON aqui: %v", err)
+        log.Fatalf("Something went wrong while trying to unmarshal tasks file: %v", err)
     }
 
     return &tasks;
